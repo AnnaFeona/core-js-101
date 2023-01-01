@@ -390,8 +390,8 @@ function isBracketsBalanced(str) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return num.toString(n);
 }
 
 
@@ -407,8 +407,23 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  if (pathes.some((item) => item[0] !== '/')) {
+    return '';
+  }
+  const arr = pathes.map((item) => item.split('/'));
+  const result = [];
+  for (let i = 0; i < arr[0].length; i += 1) {
+    for (let j = 1; j < arr.length; j += 1) {
+      if (arr[0][i] === arr[j][i]) {
+        result.push(arr[0][i]);
+      }
+    }
+  }
+  if (result.length > 2) {
+    result.push('');
+  }
+  return result.join('/');
 }
 
 
@@ -430,8 +445,26 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const h1 = m1.length;
+  const l1 = m1[0].length;
+  // const h2 = m2.length;
+  const l2 = m2[0].length;
+
+  const result = [];
+
+  for (let i = 0; i < h1; i += 1) {
+    result.push([]);
+    for (let j = 0; j < l2; j += 1) {
+      result[i].push(0);
+      let sum = 0;
+      for (let k = 0; k < l1; k += 1) {
+        sum += m1[i][k] * m2[k][j];
+      }
+      result[i][j] = sum;
+    }
+  }
+  return result;
 }
 
 
@@ -465,8 +498,50 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+
+function evaluateTicTacToePosition(position) {
+  // if rows win
+  for (let i = 0; i < position.length; i += 1) {
+    if (position[i].length === 3
+        && position[i].every((item) => item && item === position[i][0])) {
+      return position[i][0];
+    }
+  }
+  const diag = [];
+  const invertDiag = [];
+  const invert = [];
+
+  for (let i = 0; i < position.length; i += 1) {
+    invert.push([]);
+    for (let j = 0; j < position[i].length; j += 1) {
+      if (i === j) {
+        diag.push(position[i][j]);
+      }
+      if (i === position[i].length - 1 - j) {
+        invertDiag.push(position[i][j]);
+      }
+      invert[i].push(position[j][i]);
+    }
+  }
+
+  // if one of diagonals win
+  if (diag.length === 3
+      && diag.every((item) => item && item === diag[0])) {
+    return diag[0];
+  }
+  if (invertDiag.length === 3
+      && invertDiag.every((item) => item && item === invertDiag[0])) {
+    return invertDiag[0];
+  }
+
+  // if column win
+  for (let i = 0; i < invert.length; i += 1) {
+    if (invert[i].length === 3
+        && invert[i].every((item) => item && item === invert[i][0])) {
+      return invert[i][0];
+    }
+  }
+  return undefined;
 }
 
 
